@@ -17,7 +17,7 @@ FROM openjdk:18-ea-10-jdk-slim
 WORKDIR /app
 
 # Copy the JAR file from the build stage
-COPY --from=build /app/target/taskbe-0.0.1-SNAPSHOT.jar app.jar
+COPY --from=build /app/target/demo-0.0.1-SNAPSHOT.jar app.jar
 
 # Debug: List files in /app
 RUN ls -l /app
