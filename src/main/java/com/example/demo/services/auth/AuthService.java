@@ -1,10 +1,13 @@
 package com.example.demo.services.auth;
 
+import com.example.demo.dto.CategoryDto;
 import com.example.demo.dto.auth.*;
 import com.example.demo.exceptions.NotFoundException;
 import com.example.demo.exceptions.UnAuthorizedException;
+import com.example.demo.models.Category;
 import com.example.demo.models.UserEntity;
 import com.example.demo.repositories.UserRepository;
+import com.example.demo.services.CategoryService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -25,6 +28,8 @@ public class AuthService {
 
     @Autowired
     private final JwtService jwtService;
+    @Autowired
+    private final CategoryService categoryService;
 
     @Autowired
     private final AuthenticationManager authenticationManager;
@@ -32,10 +37,11 @@ public class AuthService {
     public AuthService(UserRepository userRepository,
                        PasswordEncoder passwordEncoder,
                        JwtService jwtService,
-                       AuthenticationManager authenticationManager) {
+                       CategoryService categoryService, AuthenticationManager authenticationManager) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtService = jwtService;
+        this.categoryService = categoryService;
         this.authenticationManager = authenticationManager;
     }
 
@@ -70,6 +76,9 @@ public class AuthService {
         userEntity.setDob(authDto.getDob());
         userEntity.setPassword(passwordEncoder.encode(authDto.getPassword()));
         userRepository.save(userEntity);
+        CategoryDto categoryDto = new CategoryDto();
+        categoryDto.setName("Học tập");
+        categoryService.createCategory(categoryDto, authDto.getEmail());
         var jwtToken = jwtService.generateToken(userEntity.getEmail());
         ModelMapper modelMapper = new ModelMapper();
         return AuthResponse.builder()

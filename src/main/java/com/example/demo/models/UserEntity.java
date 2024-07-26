@@ -17,7 +17,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "user")
+@Table(name = "\"user\"")
 public class UserEntity extends BaseEntity {
     @NotBlank(message = "Email is not bank")
     private String email;
